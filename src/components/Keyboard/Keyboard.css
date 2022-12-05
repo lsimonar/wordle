@@ -1,0 +1,23 @@
+.key {
+    background-color: #d3d6da;
+    padding: 10px;
+    margin: 3px;
+    border-radius: 5px;
+    width: 15px;
+    min-width: fit-content;
+    height: 25px;
+    text-align: center;
+    line-height: 25px;
+    cursor: pointer;
+}
+
+.keyboard-row-ctn {
+    display: flex;
+    flex-direction: row;
+}
+
+.keyboard-ctn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

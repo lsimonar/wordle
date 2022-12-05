@@ -1,0 +1,35 @@
+.square-tile {
+    border: 2px solid #d3d6da;
+    border-radius: 5px;
+    width: 60px;
+    height: 60px;
+    margin: 5px;
+    text-align: center;
+    line-height: 60px;
+    font-size: 30px;
+    font-weight: 700;
+ }
+
+.row-ctn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.green {
+    background-color: #43a047;
+    border-color: #43a047;
+    color:white;
+}
+
+.yellow {
+    background-color: #e4a81d;
+    border-color: #e4a81d;
+    color:white;
+}
+
+.grey {
+    background-color: #757575;
+    border-color: #757575;
+    color:white;
+}
