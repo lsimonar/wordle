@@ -1,30 +1,31 @@
 import React from 'react';
 import  Row  from '../Row/Row';
 import './Grid.css';
-import { solutionWords } from '../../App';
 
-export default function Grid ({guessList, attemptNumber}: {guessList: string[], attemptNumber: number}) {
-
+export default function Grid ({guessList, attemptNumber, solutionWord}: {guessList: string[], attemptNumber: number, solutionWord: string}) {
 
     function getGuessStyle(row: number): string[] {
 
         let guessStyle: string[] = [];
+        let solutionArray: string[] = solutionWord.split("");
 
         if (attemptNumber - 1 >= row){
-            
-            for(let i=0; i < guessList[row].length; i++){
-                if (guessList[row][i] === solutionWords[0][i]){
-                    console.log("equal")
-                    guessStyle.push('green');
-                } else if (solutionWords[0].includes(guessList[row][i])){
-                    console.log("includes")
-                    guessStyle.push('yellow');
+            guessStyle = new Array(5).fill('grey');
+            solutionArray.forEach( (letter, i) => {
+                if(guessList[row][i] === letter ){
+                    guessStyle[i] = 'green';
+                    solutionArray[i] = '';
                 }
-                else {
-                    console.log("not includes")
-                    guessStyle.push('grey');
+            });
+
+            for(let i=0; i < guessList[row].length; i++){
+                
+                if (solutionArray.includes(guessList[row][i])){
+                    guessStyle[i] = 'yellow';
+                    solutionArray[solutionArray.indexOf(guessList[row][i])] = '';
                 }
             }
+
         }
         return guessStyle;
     }

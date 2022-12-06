@@ -1,9 +1,9 @@
 import React from 'react';
 import './Keyboard.css';
 
-const row1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
-const row2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
-const row3 = ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"]
+export const keys = [["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+              ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+              ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"]]
 
 export default function Keyboard({onKeyPress}: {onKeyPress: any}) {
 
@@ -22,9 +22,9 @@ export default function Keyboard({onKeyPress}: {onKeyPress: any}) {
     const generateKeyboard =  () => {
         return(
             <> 
-                <div className="keyboard-row-ctn">{generateKeyboardRow(row1)}</div>
-                <div className="keyboard-row-ctn">{generateKeyboardRow(row2)}</div> 
-                <div className="keyboard-row-ctn">{generateKeyboardRow(row3)}</div> 
+                <div className="keyboard-row-ctn">{generateKeyboardRow(keys[0])}</div>
+                <div className="keyboard-row-ctn">{generateKeyboardRow(keys[1])}</div> 
+                <div className="keyboard-row-ctn">{generateKeyboardRow(keys[2])}</div> 
             </>
         )
     }

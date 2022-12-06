@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Grid from './components/Grid/Grid';
-import Keyboard from './components/Keyboard/Keyboard';
-
-export const solutionWords = ['GUAPO'];
-
+import Keyboard, { keys } from './components/Keyboard/Keyboard';
 
 function App() {
 
   const [attemptNumber, setAttemptNumber] = useState<number>(0);
   const [guessList, setGuessList] = useState<string[]>(new Array(6).fill(""));
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [error, setError] = useState();
+  const [solutionWord, setSolutionWord] = useState<string>("");
 
   const handleKeyPress = (letter: string) => {
     let guess = [...guessList]
@@ -33,9 +33,21 @@ function App() {
   }
 
   useEffect(() => {
+    const fetchWord = async () => {
+      const response = await fetch(`https://random-word-api.herokuapp.com/word?length=5`);
+      const jsonBody = await response.json();
+      setSolutionWord(jsonBody[0].toUpperCase())
+    } 
+    fetchWord();
+    setIsLoaded(true);
+  }, [])
+
+  useEffect(() => {
     const keyDownHandler = (event: any) => {
-      console.log('User pressed: ', event.key);
-      handleKeyPress(event.key.toUpperCase());
+      let allKeys = keys.flat();
+      if( ( allKeys.includes(event.key.toUpperCase() ) || (event.key === 'Backspace'))) {
+        handleKeyPress(event.key.toUpperCase());
+      }
     };
 
     document.addEventListener('keydown', keyDownHandler);
@@ -43,12 +55,16 @@ function App() {
     return () => {
       document.removeEventListener('keydown', keyDownHandler);
     };
-  }, []);
+  }, [guessList, attemptNumber]);
 
   return (
-    <div className="App-ctn">
-      <Grid guessList={guessList} attemptNumber={attemptNumber}/>
-      <Keyboard onKeyPress={handleKeyPress}/>
+    <div>
+      { isLoaded &&
+        <div className="App-ctn">
+          <Grid guessList={guessList} attemptNumber={attemptNumber} solutionWord={solutionWord}/>
+          <Keyboard onKeyPress={handleKeyPress}/>
+        </div>
+      }
     </div>
   );
 }
