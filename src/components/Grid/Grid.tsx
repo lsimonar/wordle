@@ -11,18 +11,19 @@ export default function Grid ({guessList, attemptNumber, solutionWord}: {guessLi
 
         if (attemptNumber - 1 >= row){
             guessStyle = new Array(5).fill('grey');
+
             solutionArray.forEach( (letter, i) => {
                 if(guessList[row][i] === letter ){
                     guessStyle[i] = 'green';
-                    solutionArray[i] = '';
+                    solutionArray[i] = 'g';
                 }
             });
 
             for(let i=0; i < guessList[row].length; i++){
                 
-                if (solutionArray.includes(guessList[row][i])){
+                if (solutionArray.includes(guessList[row][i]) && solutionArray[i] !== 'g'){
                     guessStyle[i] = 'yellow';
-                    solutionArray[solutionArray.indexOf(guessList[row][i])] = '';
+                    solutionArray[solutionArray.indexOf(guessList[row][i])] = 'y';
                 }
             }
 

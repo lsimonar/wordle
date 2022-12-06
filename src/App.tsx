@@ -8,8 +8,7 @@ function App() {
   const [attemptNumber, setAttemptNumber] = useState<number>(0);
   const [guessList, setGuessList] = useState<string[]>(new Array(6).fill(""));
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [error, setError] = useState();
-  const [solutionWord, setSolutionWord] = useState<string>("");
+  const [solutionWord, setSolutionWord] = useState<string | undefined>();
 
   const handleKeyPress = (letter: string) => {
     let guess = [...guessList]
@@ -56,10 +55,10 @@ function App() {
       document.removeEventListener('keydown', keyDownHandler);
     };
   }, [guessList, attemptNumber]);
-
+  console.log(solutionWord)
   return (
     <div>
-      { isLoaded &&
+      { solutionWord &&
         <div className="App-ctn">
           <Grid guessList={guessList} attemptNumber={attemptNumber} solutionWord={solutionWord}/>
           <Keyboard onKeyPress={handleKeyPress}/>
