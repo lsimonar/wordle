@@ -54,7 +54,7 @@ function App() {
   }
 
   const fetchWord = async () => {
-    const response = await fetch(`https://random-word-api.herokuapp.com/word?length=5`);
+    const response = await fetch(`https://random-word-api.herokuapp.com/word?length=5&lang=es`);
     const jsonBody = await response.json();
     setSolutionWord(jsonBody[0].toUpperCase())
   } 
@@ -76,7 +76,7 @@ function App() {
     return () => {
       document.removeEventListener('keydown', keyDownHandler);
     };
-  }, [guessList, attemptNumber]);
+  }, [handleKeyPress]);
   console.log(solutionWord)
   return (
     <div>
