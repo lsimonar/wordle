@@ -7,38 +7,60 @@ function App() {
 
   const [attemptNumber, setAttemptNumber] = useState<number>(0);
   const [guessList, setGuessList] = useState<string[]>(new Array(6).fill(""));
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [solutionWord, setSolutionWord] = useState<string | undefined>();
+  const [hasWon, setHasWon] = useState<boolean>(false);
+  const [hasLost, setHasLost] = useState<boolean>(false);
+
+  const playAgain = () => {
+    setHasWon(false);
+    setHasLost(false);
+    setGuessList(new Array(6).fill(""));
+    setAttemptNumber(0);
+    fetchWord();
+  }
 
   const handleKeyPress = (letter: string) => {
-    let guess = [...guessList]
-    if(letter === "ENTER"){
-      if(guessList[attemptNumber].length === 5){
-        setAttemptNumber(attemptNumber + 1);
-        return
-      } else{
-        alert("Word too short!")
-      }    
-    } else if(letter === '⌫' || letter === 'BACKSPACE') {
-        guess[attemptNumber] = guess[attemptNumber].slice(0, -1);
-        setGuessList(guess);
-        return
-    } else if(guessList[attemptNumber].length < 5){
-        guess[attemptNumber] += letter
-        setGuessList(guess);
-        return
+
+    if(!hasWon && !hasLost){
+      let guess = [...guessList]
+      if(letter === "ENTER"){
+        if(guessList[attemptNumber].length === 5){
+          if(attemptNumber < 5){
+            if(guess[attemptNumber] === solutionWord){
+              setHasWon(true);
+              setAttemptNumber(attemptNumber + 1);
+            } else {
+              setAttemptNumber(attemptNumber + 1);
+            }
+            return
+          } else {
+            setHasLost(true);
+            setAttemptNumber(attemptNumber + 1);
+          }
+        } else{
+          alert("Word too short!")
+        }    
+      } else if(letter === '⌫' || letter === 'BACKSPACE') {
+          guess[attemptNumber] = guess[attemptNumber].slice(0, -1);
+          setGuessList(guess);
+          return
+      } else if(guessList[attemptNumber].length < 5){
+          guess[attemptNumber] += letter
+          setGuessList(guess);
+          return
+      }
     }
 
   }
 
+  const fetchWord = async () => {
+    const response = await fetch(`https://random-word-api.herokuapp.com/word?length=5`);
+    const jsonBody = await response.json();
+    setSolutionWord(jsonBody[0].toUpperCase())
+  } 
+
   useEffect(() => {
-    const fetchWord = async () => {
-      const response = await fetch(`https://random-word-api.herokuapp.com/word?length=5`);
-      const jsonBody = await response.json();
-      setSolutionWord(jsonBody[0].toUpperCase())
-    } 
     fetchWord();
-    setIsLoaded(true);
   }, [])
 
   useEffect(() => {
@@ -61,7 +83,18 @@ function App() {
       { solutionWord &&
         <div className="App-ctn">
           <Grid guessList={guessList} attemptNumber={attemptNumber} solutionWord={solutionWord}/>
-          <Keyboard onKeyPress={handleKeyPress}/>
+          { hasLost &&
+            <h1>The word was {solutionWord}!</h1>
+          }
+          { hasWon &&
+            <h1>Well done!</h1>
+          }
+          { (hasLost || hasWon) &&
+            <button onClick={playAgain}>Play Again</button>
+          }
+          { !hasWon && !hasLost &&
+            <Keyboard onKeyPress={handleKeyPress}/>
+          }
         </div>
       }
     </div>
