@@ -96,7 +96,10 @@ function App() {
             <button onClick={playAgain}>Play Again</button>
           }
           { !hasWon && !hasLost &&
-            <Keyboard onKeyPress={handleKeyPress}/>
+            <>
+              <Keyboard onKeyPress={handleKeyPress}/>
+              <button onClick={playAgain}>Reset</button>
+            </>
           }
         </div>
       }
