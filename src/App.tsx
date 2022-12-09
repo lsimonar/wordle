@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import './App.css';
 import Grid from './components/Grid/Grid';
 import Keyboard, { keys } from './components/Keyboard/Keyboard';
+import { useLocalStorage } from './utils/useLocalStorage';
 
 function App() {
 
-  const [attemptNumber, setAttemptNumber] = useState<number>(0);
-  const [guessList, setGuessList] = useState<string[]>(new Array(6).fill(""));
-  const [solutionWord, setSolutionWord] = useState<string | undefined>();
-  const [hasWon, setHasWon] = useState<boolean>(false);
-  const [hasLost, setHasLost] = useState<boolean>(false);
+  const [attemptNumber, setAttemptNumber] = useLocalStorage("attempt", 0);
+  const [guessList, setGuessList] = useLocalStorage("guessList", new Array(6).fill(""));
+  const [solutionWord, setSolutionWord] = useLocalStorage("solution", undefined);
+  const [hasWon, setHasWon] = useLocalStorage("hasWon", false);
+  const [hasLost, setHasLost] = useLocalStorage("hasLost", false);
 
   const playAgain = () => {
     setHasWon(false);
@@ -19,7 +20,7 @@ function App() {
     fetchWord();
   }
 
-  const handleKeyPress = (letter: string) => {
+  const handleKeyPress = useCallback((letter: string) => {
 
     if(!hasWon && !hasLost){
       let guess = [...guessList]
@@ -51,17 +52,19 @@ function App() {
       }
     }
 
-  }
+  }, [attemptNumber, hasLost, hasWon, guessList, solutionWord, setAttemptNumber, setGuessList, setHasLost, setHasWon])
 
-  const fetchWord = async () => {
-    const response = await fetch(`https://random-word-api.herokuapp.com/word?length=5&lang=es`);
-    const jsonBody = await response.json();
-    setSolutionWord(jsonBody[0].toUpperCase())
-  } 
+  const fetchWord = useCallback( async () => {
+      const response = await fetch(`https://random-word-api.herokuapp.com/word?length=5&lang=es`);
+      const jsonBody = await response.json();
+      setSolutionWord(jsonBody[0].toUpperCase())
+  }, [setSolutionWord])
 
   useEffect(() => {
-    fetchWord();
-  }, [])
+    if(!solutionWord){
+      fetchWord();
+    }
+  }, [fetchWord, solutionWord])
 
   useEffect(() => {
     const keyDownHandler = (event: any) => {
